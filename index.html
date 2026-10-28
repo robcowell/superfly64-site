@@ -70,11 +70,6 @@
     place-items: center;
     text-align: center;
     padding: 6rem 0 4rem;
-    background:
-      radial-gradient(ellipse 60% 45% at 50% 42%, rgba(255, 63, 210, .16), transparent 70%),
-      radial-gradient(ellipse 50% 40% at 78% 20%, rgba(95, 227, 255, .14), transparent 70%),
-      radial-gradient(ellipse 55% 50% at 15% 75%, rgba(107, 69, 216, .35), transparent 70%),
-      linear-gradient(to bottom, #120838, var(--bg));
     overflow: hidden;
   }
   .hero::before {
@@ -168,7 +163,6 @@
   .btn.ghost:hover { background: rgba(95, 227, 255, .2); box-shadow: 0 0 28px rgba(95, 227, 255, .7); }
 
   /* Trailer */
-  .play { background: linear-gradient(var(--bg), var(--bg-2)); }
   .screen {
     border-radius: 14px; overflow: hidden;
     border: 1px solid rgba(255, 63, 210, .5);
@@ -207,12 +201,6 @@
   }
   .key.up kbd { border-color: var(--cyan); background: rgba(95, 227, 255, .1); box-shadow: 0 0 14px rgba(95, 227, 255, .4); }
 
-  /* Band behind the worlds */
-  .band {
-    background:
-      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(107, 69, 216, .3), transparent 75%),
-      linear-gradient(var(--bg-2), #1a0d45 50%, var(--bg));
-  }
   .section-head { text-align: center; margin-bottom: 3rem; }
   .section-head p { color: var(--muted); max-width: 40rem; margin: 0 auto; }
 
@@ -268,12 +256,7 @@
   .pair img { width: 100%; image-rendering: pixelated; border-radius: 10px; border: 1px solid var(--line); }
 
   /* Get ready */
-  .ready {
-    text-align: center;
-    background:
-      radial-gradient(ellipse 60% 55% at 50% 45%, rgba(255, 154, 31, .14), transparent 70%),
-      linear-gradient(var(--bg), #1a0d45 50%, var(--bg));
-  }
+  .ready { text-align: center; }
   .specs {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;
     text-align: left; margin-top: 2.4rem;
@@ -284,13 +267,55 @@
   .spec code { font: 600 1.05rem "Rajdhani", monospace; color: var(--gold); letter-spacing: .06em; }
 
   footer {
-    padding: 3rem 0 3.5rem; text-align: center;
+    padding: 6rem 0 3.5rem; text-align: center;
     border-top: 1px solid var(--line);
     color: var(--muted); font-size: .95rem;
   }
   footer .credits { display: flex; justify-content: center; gap: .6rem 2.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
   footer .credits div { letter-spacing: .14em; text-transform: uppercase; font-weight: 700; font-size: .85rem; }
   footer .credits em { display: block; font-style: normal; color: var(--ink); font-size: 1.05rem; letter-spacing: .06em; }
+
+  /* The promo's artwork behind each section: darkened, tinted with the scene's own glow,
+     and faded into the page at top and bottom so the sections run into each other */
+  .art {
+    --dim: .72;
+    --tint: 255, 63, 210;
+    background:
+      linear-gradient(var(--bg), transparent 20%, transparent 80%, var(--bg)),
+      radial-gradient(ellipse 75% 60% at var(--glow, 50% 50%), rgba(var(--tint), .26), transparent 72%),
+      linear-gradient(rgba(11, 6, 32, var(--dim)), rgba(11, 6, 32, var(--dim))),
+      var(--art) var(--art-pos, center) / cover no-repeat;
+    background-attachment: scroll, scroll, scroll, fixed;
+  }
+  .hero.art {
+    /* no fade in at the top, and darker in the middle where the logo is */
+    background:
+      linear-gradient(transparent 60%, var(--bg)),
+      radial-gradient(ellipse 55% 45% at 50% 46%, rgba(11, 6, 32, .55), transparent 75%),
+      radial-gradient(ellipse 70% 55% at 50% 40%, rgba(var(--tint), .18), transparent 72%),
+      linear-gradient(rgba(11, 6, 32, var(--dim)), rgba(11, 6, 32, var(--dim))),
+      var(--art) var(--art-pos, center) / cover no-repeat;
+  }
+  .art-space   { --art: url("art/space.jpg");  --dim: .42; --tint: 255, 63, 210; }
+  .art-clouds  { --art: url("art/clouds.jpg"); --dim: .8;  --tint: 255, 139, 230; --art-pos: 70% 40%; }
+  .art-lineup  { --art: url("art/lineup.jpg"); --dim: .74; --tint: 95, 227, 255; --glow: 75% 50%; }
+  .art-reef    { --art: url("art/reef.jpg");   --dim: .66; --tint: 40, 200, 255; }
+  .art-canyon  { --art: url("art/canyon.jpg"); --dim: .7;   --tint: 255, 154, 31; }
+  .art-crash   { --art: url("art/crash.jpg");  --dim: .7;  --tint: 255, 110, 40; --glow: 45% 50%; }
+  .art-crystal { --art: url("art/crystal.jpg"); --dim: .68; --tint: 60, 170, 255; --glow: 30% 50%; }
+  .art-cave    { --art: url("art/cave.jpg");   --dim: .5;  --tint: 255, 140, 60; --art-pos: 35% 50%; }
+  .art-tunnel  { --art: url("art/tunnel.jpg"); --dim: .84; --tint: 95, 227, 255; --art-pos: center 30%; }
+
+  /* The canyon's gold and orange for the modes, as the promo's kettle */
+  .art-canyon .mode { background: linear-gradient(160deg, rgba(255, 154, 31, .16), rgba(11, 6, 32, .78)); }
+  .art-canyon .mode::after { background: linear-gradient(var(--gold), var(--orange), var(--pink)); box-shadow: 0 0 14px var(--orange); }
+  .art-canyon .kicker { color: var(--gold); text-shadow: 0 0 12px rgba(255, 210, 63, .6); }
+  .art-crash .strip figcaption { color: #ffb35c; text-shadow: 0 0 10px rgba(255, 140, 40, .6); }
+  .art-reef .world { background: rgba(6, 20, 48, .75); }
+  .art-reef .world:hover { border-color: var(--cyan); box-shadow: 0 0 28px rgba(95, 227, 255, .55); }
+  .art-crystal .fact b { color: #8fd8ff; }
+  .shot, .screen, .pair img, .strip img { box-shadow: 0 0 0 1px rgba(255, 255, 255, .06), 0 20px 50px rgba(0, 0, 0, .55), 0 0 40px rgba(var(--tint, 107, 69, 216), .35); }
+  .moments { padding: clamp(3rem, 7vw, 5rem) 0; }
 
   /* Reveal on scroll */
   .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
@@ -302,7 +327,7 @@
     .worlds { grid-template-columns: repeat(2, 1fr); }
     .worlds .world:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - .5rem); }
     .strip { grid-template-columns: repeat(2, 1fr); }
-    .band { background-attachment: scroll; }
+    .art { background-attachment: scroll; }
   }
   @media (max-width: 520px) {
     .pair { grid-template-columns: 1fr; }
@@ -316,7 +341,7 @@
 </head>
 <body>
 
-<header class="hero">
+<header class="hero art art-space">
   <div class="wrap">
     <p class="kicker">The legendary Atari ST original by Reservoir Gods</p>
     <h1 class="logo">SuperFly</h1>
@@ -330,7 +355,7 @@
   </div>
 </header>
 
-<section class="play" id="play">
+<section class="play art art-clouds" id="play">
   <div class="wrap">
     <div class="section-head reveal">
       <p class="kicker">Real C64 footage, all five worlds</p>
@@ -342,7 +367,7 @@
   </div>
 </section>
 
-<section>
+<section class="art art-lineup">
   <div class="wrap feature">
     <div class="reveal">
       <p class="kicker">Easy to learn</p>
@@ -358,7 +383,7 @@
   </div>
 </section>
 
-<section class="band" id="worlds">
+<section class="band art art-reef" id="worlds">
   <div class="wrap">
     <div class="section-head reveal">
       <p class="kicker">Five vehicles, five caves</p>
@@ -375,7 +400,7 @@
   </div>
 </section>
 
-<section id="modes">
+<section class="art art-canyon" id="modes">
   <div class="wrap">
     <div class="section-head reveal">
       <p class="kicker">Five game modes</p>
@@ -391,14 +416,16 @@
   </div>
 </section>
 
+<section class="moments art art-crash">
 <div class="wrap strip">
   <figure class="reveal"><img src="img/obstacle.png" alt="The submarine weaving under a block in FreeFlight" loading="lazy"><figcaption>Dodge everything</figcaption></figure>
   <figure class="reveal"><img src="img/star.png" alt="The spaceship collecting a star in StarSearch" loading="lazy"><figcaption>Chase the stars</figcaption></figure>
   <figure class="reveal"><img src="img/finish.png" alt="The helicopter crossing the chequered finish line in Stage" loading="lazy"><figcaption>Reach the finish</figcaption></figure>
   <figure class="reveal"><img src="img/tunnel.png" alt="The rocket boots threading a narrow gap" loading="lazy"><figcaption>Mind the gap</figcaption></figure>
 </div>
+</section>
 
-<section>
+<section class="art art-crystal">
   <div class="wrap feature flip">
     <div class="reveal">
       <p class="kicker">Pure 6502</p>
@@ -420,7 +447,7 @@
   </div>
 </section>
 
-<section class="ready" id="ready">
+<section class="ready art art-cave" id="ready">
   <div class="wrap">
     <p class="kicker reveal">Load "*",8,1</p>
     <h2 class="title center reveal">Get ready</h2>
@@ -432,7 +459,7 @@
   </div>
 </section>
 
-<footer>
+<footer class="art art-tunnel">
   <div class="wrap">
     <div class="credits">
       <div>Original game<em>Reservoir Gods</em></div>
