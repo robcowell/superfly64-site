@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SuperFly 64</title>
+<meta name="description" content="SuperFly, the Atari ST one-button cave flyer by Reservoir Gods, comes to the Commodore 64. C64 version by Bossman of Rift.">
+<meta property="og:title" content="SuperFly 64: coming soon to the Commodore 64">
+<meta property="og:image" content="img/world1-submarine.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Exo+2:ital,wght@1,900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0620;
+    --bg-2: #140a33;
+    --ink: #f2eeff;
+    --muted: #b7acd9;
+    --pink: #ff3fd2;
+    --pink-soft: #ff8be6;
+    --cyan: #5fe3ff;
+    --violet: #6b45d8;
+    --gold: #ffd23f;
+    --orange: #ff9a1f;
+    --line: rgba(255, 255, 255, .12);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 500 1.15rem/1.55 "Rajdhani", system-ui, sans-serif;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--cyan); }
+
+  /* The promo's type: small cyan spaced kicker over a big italic glowing title */
+  .kicker {
+    font: 700 .95rem/1 "Rajdhani", sans-serif;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    text-shadow: 0 0 12px rgba(95, 227, 255, .6);
+    margin: 0 0 .6rem;
+  }
+  .title {
+    font: 400 clamp(2.6rem, 7vw, 5.2rem)/.95 "Anton", Impact, sans-serif;
+    text-transform: uppercase;
+    transform: skewX(-8deg);
+    transform-origin: left bottom;
+    margin: 0 0 1.4rem;
+    color: #fff;
+    text-shadow:
+      0 0 2px var(--pink),
+      0 0 14px var(--pink),
+      0 0 34px rgba(255, 63, 210, .7),
+      3px 4px 0 rgba(60, 0, 80, .6);
+  }
+  .title.center { transform-origin: center bottom; }
+
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+  section { position: relative; padding: clamp(4rem, 10vw, 7.5rem) 0; }
+
+  /* Hero */
+  .hero {
+    min-height: min(100svh, 780px);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 6rem 0 4rem;
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 42%, rgba(255, 63, 210, .16), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 78% 20%, rgba(95, 227, 255, .14), transparent 70%),
+      radial-gradient(ellipse 55% 50% at 15% 75%, rgba(107, 69, 216, .35), transparent 70%),
+      linear-gradient(to bottom, #120838, var(--bg));
+    overflow: hidden;
+  }
+  .hero::before {
+    /* drifting stars */
+    content: "";
+    position: absolute; inset: -50%;
+    background-image:
+      radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+      radial-gradient(1px 1px at 70% 60%, #cfe9ff, transparent),
+      radial-gradient(1.5px 1.5px at 40% 80%, #ffd6f6, transparent),
+      radial-gradient(1px 1px at 85% 15%, #fff, transparent),
+      radial-gradient(1px 1px at 10% 70%, #fff, transparent);
+    background-size: 340px 340px;
+    opacity: .55;
+    animation: drift 60s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes drift { to { transform: translateX(-340px); } }
+  .hero > .wrap { position: relative; }
+
+  .logo {
+    position: relative;
+    margin: 0;
+    font: 900 italic clamp(3.6rem, 15vw, 11rem)/1 "Exo 2", sans-serif;
+    letter-spacing: -.01em;
+    text-transform: uppercase;
+    /* split chrome: ice blue above, violet below, as the end card */
+    background: linear-gradient(180deg,
+      #e2f7ff 0%, #a9e4ff 50%, #5638c9 50.5%, #7c46e0 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* a dark outline from offset shadows, as a text stroke draws each glyph's inner contours */
+    filter:
+      drop-shadow(.03em 0 0 #1a0a3a) drop-shadow(-.03em 0 0 #1a0a3a)
+      drop-shadow(0 .03em 0 #1a0a3a) drop-shadow(0 -.03em 0 #1a0a3a)
+      drop-shadow(0 0 2px var(--pink))
+      drop-shadow(0 0 18px rgba(255, 63, 210, .85))
+      drop-shadow(0 0 48px rgba(255, 63, 210, .45));
+    animation: flicker 6s infinite;
+  }
+  @keyframes flicker {
+    0%, 92%, 100% { opacity: 1; }
+    93% { opacity: .75; }
+    94% { opacity: 1; }
+    96% { opacity: .85; }
+  }
+  .platform {
+    display: flex; align-items: center; justify-content: center; gap: 1.2rem;
+    font: 700 clamp(1rem, 2.6vw, 1.6rem)/1 "Rajdhani", sans-serif;
+    letter-spacing: .4em;
+    margin: 1.2rem 0 1.8rem;
+    padding-left: .4em;
+  }
+  .platform::before, .platform::after {
+    content: ""; width: clamp(2rem, 9vw, 6rem); height: 2px;
+    background: var(--cyan); box-shadow: 0 0 10px var(--cyan);
+  }
+  .soon {
+    display: inline-block;
+    font: 400 clamp(2.4rem, 7vw, 4.6rem)/1 "Anton", sans-serif;
+    text-transform: uppercase;
+    transform: skewX(-8deg);
+    background: linear-gradient(180deg, #fff27a, var(--gold) 45%, var(--orange));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 16px rgba(255, 154, 31, .7));
+    margin: 0;
+  }
+  .byline {
+    margin: 2.4rem 0 0;
+    font-weight: 700; font-size: .9rem;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: #d9cfff;
+  }
+  .byline span { color: var(--pink-soft); margin: 0 .8em; }
+  .cta-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.4rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: .6rem;
+    padding: .85rem 1.6rem;
+    font: 700 1rem/1 "Rajdhani", sans-serif;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: #fff; text-decoration: none;
+    border: 2px solid var(--pink);
+    border-radius: 999px;
+    background: rgba(255, 63, 210, .14);
+    box-shadow: 0 0 18px rgba(255, 63, 210, .45), inset 0 0 14px rgba(255, 63, 210, .25);
+    transition: background .2s, box-shadow .2s, transform .2s;
+  }
+  .btn:hover { background: rgba(255, 63, 210, .32); box-shadow: 0 0 30px rgba(255, 63, 210, .8); transform: translateY(-2px); }
+  .btn.ghost { border-color: var(--cyan); background: rgba(95, 227, 255, .08); box-shadow: 0 0 16px rgba(95, 227, 255, .35); }
+  .btn.ghost:hover { background: rgba(95, 227, 255, .2); box-shadow: 0 0 28px rgba(95, 227, 255, .7); }
+
+  /* Trailer */
+  .play { background: linear-gradient(var(--bg), var(--bg-2)); }
+  .screen {
+    border-radius: 14px; overflow: hidden;
+    border: 1px solid rgba(255, 63, 210, .5);
+    box-shadow: 0 0 0 1px rgba(95, 227, 255, .25), 0 0 60px rgba(255, 63, 210, .3), 0 30px 80px rgba(0, 0, 0, .6);
+    background: #000;
+  }
+  .screen video { display: block; width: 100%; aspect-ratio: 1152 / 816; image-rendering: pixelated; }
+  .screen.c64 { max-width: 860px; margin-inline: auto; }
+
+  /* Split feature rows */
+  .feature {
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center;
+  }
+  .feature.flip > :first-child { order: 2; }
+  .feature p { color: var(--muted); margin: 0 0 1rem; max-width: 34rem; }
+  .feature p strong { color: var(--ink); }
+  .shot img { width: 100%; }
+  .shot {
+    border-radius: 12px; overflow: hidden; image-rendering: pixelated;
+    border: 1px solid var(--line);
+    box-shadow: 0 0 40px rgba(107, 69, 216, .45);
+  }
+  .controls { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-top: 1.6rem; }
+  .key {
+    display: flex; align-items: center; gap: .7rem;
+    font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: .95rem;
+  }
+  .key kbd {
+    display: grid; place-items: center;
+    min-width: 3rem; height: 3rem; padding: 0 .7rem;
+    font: 700 .9rem "Rajdhani", sans-serif;
+    border-radius: 10px;
+    border: 2px solid var(--pink);
+    background: rgba(255, 63, 210, .12);
+    box-shadow: 0 0 14px rgba(255, 63, 210, .4);
+  }
+  .key.up kbd { border-color: var(--cyan); background: rgba(95, 227, 255, .1); box-shadow: 0 0 14px rgba(95, 227, 255, .4); }
+
+  /* Band behind the worlds */
+  .band {
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 50%, rgba(107, 69, 216, .3), transparent 75%),
+      linear-gradient(var(--bg-2), #1a0d45 50%, var(--bg));
+  }
+  .section-head { text-align: center; margin-bottom: 3rem; }
+  .section-head p { color: var(--muted); max-width: 40rem; margin: 0 auto; }
+
+  .worlds { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+  .world {
+    margin: 0;
+    border-radius: 12px; overflow: hidden;
+    background: rgba(11, 6, 32, .7);
+    border: 1px solid var(--line);
+    transition: transform .25s, border-color .25s, box-shadow .25s;
+  }
+  .world:hover { transform: translateY(-6px); border-color: var(--pink); box-shadow: 0 0 28px rgba(255, 63, 210, .5); }
+  .world img { width: 100%; aspect-ratio: 304 / 200; image-rendering: pixelated; }
+  .world figcaption { padding: .8rem 1rem 1rem; }
+  .world .n { font-weight: 700; font-size: .78rem; letter-spacing: .28em; color: var(--cyan); text-transform: uppercase; }
+  .world .v { font: 400 1.5rem/1.1 "Anton", sans-serif; text-transform: uppercase; display: block; transform: skewX(-8deg); transform-origin: left; }
+
+  /* Modes */
+  .modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .mode {
+    position: relative; overflow: hidden;
+    padding: 1.5rem 1.4rem 1.6rem;
+    border-radius: 14px;
+    background: linear-gradient(160deg, rgba(107, 69, 216, .35), rgba(20, 10, 51, .6));
+    border: 1px solid var(--line);
+  }
+  .mode::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(var(--pink), var(--cyan));
+    box-shadow: 0 0 14px var(--pink);
+  }
+  .mode h3 {
+    margin: 0 0 .5rem;
+    font: 400 1.8rem/1 "Anton", sans-serif; text-transform: uppercase;
+    transform: skewX(-8deg); transform-origin: left;
+    text-shadow: 0 0 14px rgba(255, 63, 210, .7);
+  }
+  .mode p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+
+  /* Moments from play */
+  .strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .strip figure { margin: 0; }
+  .strip img { width: 100%; aspect-ratio: 304 / 200; image-rendering: pixelated; border-radius: 10px; border: 1px solid var(--line); }
+  .strip figcaption { margin-top: .6rem; font-weight: 700; font-size: .85rem; letter-spacing: .22em; text-transform: uppercase; color: var(--cyan); }
+
+  /* Faithful */
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.4rem 2rem; margin-top: 1rem; }
+  .fact { border-top: 1px solid var(--line); padding-top: 1rem; }
+  .fact b { display: block; font-size: 1.05rem; letter-spacing: .14em; text-transform: uppercase; color: var(--pink-soft); margin-bottom: .3rem; }
+  .fact span { color: var(--muted); font-size: 1.05rem; }
+
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pair img { width: 100%; image-rendering: pixelated; border-radius: 10px; border: 1px solid var(--line); }
+
+  /* Get ready */
+  .ready {
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 45%, rgba(255, 154, 31, .14), transparent 70%),
+      linear-gradient(var(--bg), #1a0d45 50%, var(--bg));
+  }
+  .specs {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem;
+    text-align: left; margin-top: 2.4rem;
+  }
+  .spec { padding: 1.3rem 1.4rem; border-radius: 14px; background: rgba(11, 6, 32, .78); border: 1px solid var(--line); backdrop-filter: blur(4px); }
+  .spec h3 { margin: 0 0 .5rem; font-size: .9rem; letter-spacing: .28em; text-transform: uppercase; color: var(--cyan); }
+  .spec p { margin: 0; color: var(--muted); font-size: 1.05rem; }
+  .spec code { font: 600 1.05rem "Rajdhani", monospace; color: var(--gold); letter-spacing: .06em; }
+
+  footer {
+    padding: 3rem 0 3.5rem; text-align: center;
+    border-top: 1px solid var(--line);
+    color: var(--muted); font-size: .95rem;
+  }
+  footer .credits { display: flex; justify-content: center; gap: .6rem 2.4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  footer .credits div { letter-spacing: .14em; text-transform: uppercase; font-weight: 700; font-size: .85rem; }
+  footer .credits em { display: block; font-style: normal; color: var(--ink); font-size: 1.05rem; letter-spacing: .06em; }
+
+  /* Reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .feature { grid-template-columns: 1fr; }
+    .feature.flip > :first-child { order: 0; }
+    .worlds { grid-template-columns: repeat(2, 1fr); }
+    .worlds .world:last-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - .5rem); }
+    .strip { grid-template-columns: repeat(2, 1fr); }
+    .band { background-attachment: scroll; }
+  }
+  @media (max-width: 520px) {
+    .pair { grid-template-columns: 1fr; }
+    .byline span { display: block; height: .4rem; visibility: hidden; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">The legendary Atari ST original by Reservoir Gods</p>
+    <h1 class="logo">SuperFly</h1>
+    <div class="platform">COMMODORE 64</div>
+    <p class="soon">Coming soon</p>
+    <div class="cta-row">
+      <a class="btn" href="#play">&#9654;&nbsp; Watch it play</a>
+      <a class="btn ghost" href="#worlds">See the game</a>
+    </div>
+    <p class="byline">Original Atari ST game by Reservoir Gods<span>&middot;</span>C64 version by Bossman of Rift</p>
+  </div>
+</header>
+
+<section class="play" id="play">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Real C64 footage, all five worlds</p>
+      <h2 class="title center">Watch it play</h2>
+    </div>
+    <div class="screen c64 reveal">
+      <video src="gameplay.mp4" poster="img/poster.png" controls preload="metadata" playsinline></video>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap feature">
+    <div class="reveal">
+      <p class="kicker">Easy to learn</p>
+      <h2 class="title">One button.</h2>
+      <p><strong>Hold fire to thrust up. Let go to fall. Don't touch the cave.</strong></p>
+      <p>That's the whole of it. The cave twists, narrows and throws blocks in your way, and every crash is your own fault. Just one more go.</p>
+      <div class="controls">
+        <div class="key up"><kbd>&#9650;</kbd> Hold fire</div>
+        <div class="key"><kbd>&#9660;</kbd> Let go</div>
+      </div>
+    </div>
+    <div class="shot reveal"><img src="img/thrust.png" alt="The helicopter thrusting up past an obstacle on the C64" loading="lazy"></div>
+  </div>
+</section>
+
+<section class="band" id="worlds">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Five vehicles, five caves</p>
+      <h2 class="title center">Five worlds</h2>
+      <p>Every world has its own craft, its own colours and its own tune, all from the original. Playing earns experience, and experience opens the worlds.</p>
+    </div>
+    <div class="worlds">
+      <figure class="world reveal"><img src="img/world1-submarine.png" alt="World 1 on the C64: the submarine" loading="lazy"><figcaption><span class="n">World 1</span><span class="v">Submarine</span></figcaption></figure>
+      <figure class="world reveal"><img src="img/world2-helicopter.png" alt="World 2 on the C64: the helicopter" loading="lazy"><figcaption><span class="n">World 2</span><span class="v">Helicopter</span></figcaption></figure>
+      <figure class="world reveal"><img src="img/world3-spaceship.png" alt="World 3 on the C64: the spaceship" loading="lazy"><figcaption><span class="n">World 3</span><span class="v">Spaceship</span></figcaption></figure>
+      <figure class="world reveal"><img src="img/world4-rocket-boots.png" alt="World 4 on the C64: the rocket boots" loading="lazy"><figcaption><span class="n">World 4</span><span class="v">Rocket boots</span></figcaption></figure>
+      <figure class="world reveal"><img src="img/world5-kettle.png" alt="World 5 on the C64: the kettle" loading="lazy"><figcaption><span class="n">World 5</span><span class="v">Kettle</span></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="modes">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <p class="kicker">Five game modes</p>
+      <h2 class="title center">Five ways to fly</h2>
+    </div>
+    <div class="modes">
+      <div class="mode reveal"><h3>FreeFlight</h3><p>Fly as far as you can. The cave goes on for ever; you won't.</p></div>
+      <div class="mode reveal"><h3>StarSearch</h3><p>Chase the stars. Collect enough on each stage to move on, with three lives to do it.</p></div>
+      <div class="mode reveal"><h3>Stage</h3><p>Reach the finish line. Each stage runs further than the last.</p></div>
+      <div class="mode reveal"><h3>Hunter</h3><p>One life. As many stars as you can grab before the cave gets you.</p></div>
+      <div class="mode reveal"><h3>Story</h3><p>Dr Snuggles' quest to rescue Kylie, eight stages with cutscenes and all.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap strip">
+  <figure class="reveal"><img src="img/obstacle.png" alt="The submarine weaving under a block in FreeFlight" loading="lazy"><figcaption>Dodge everything</figcaption></figure>
+  <figure class="reveal"><img src="img/star.png" alt="The spaceship collecting a star in StarSearch" loading="lazy"><figcaption>Chase the stars</figcaption></figure>
+  <figure class="reveal"><img src="img/finish.png" alt="The helicopter crossing the chequered finish line in Stage" loading="lazy"><figcaption>Reach the finish</figcaption></figure>
+  <figure class="reveal"><img src="img/tunnel.png" alt="The rocket boots threading a narrow gap" loading="lazy"><figcaption>Mind the gap</figcaption></figure>
+</div>
+
+<section>
+  <div class="wrap feature flip">
+    <div class="reveal">
+      <p class="kicker">Pure 6502</p>
+      <h2 class="title">Faithful to the original</h2>
+      <p>Written from the ground up in 6502 assembly, ported from the original's own code rather than guessed at from playing it.</p>
+      <div class="facts">
+        <div class="fact"><b>Same caves</b><span>The terrain generator, its random numbers and all, checked against the ST version column by column.</span></div>
+        <div class="fact"><b>Same feel</b><span>50 updates a second with the original's physics, to the pixel.</span></div>
+        <div class="fact"><b>Same tunes</b><span>MSG's music, every one of the nine, on the SID's three voices.</span></div>
+        <div class="fact"><b>All the extras</b><span>High-score tables, replays, a gallery to unlock, a jukebox, stats, and it all saves to disk.</span></div>
+      </div>
+    </div>
+    <div class="pair reveal">
+      <img src="img/loading.png" alt="The SuperFly loading picture on the C64" loading="lazy">
+      <img src="img/menu.png" alt="The C64 version's main menu" loading="lazy">
+      <img src="img/results.png" alt="The results screen, with experience gained" loading="lazy">
+      <img src="img/canyon.png" alt="The kettle flying in world 5 on the C64" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="ready" id="ready">
+  <div class="wrap">
+    <p class="kicker reveal">Load "*",8,1</p>
+    <h2 class="title center reveal">Get ready</h2>
+    <div class="specs">
+      <div class="spec reveal"><h3>Machine</h3><p>A PAL Commodore 64.</p></div>
+      <div class="spec reveal"><h3>Drive</h3><p>A 1541, 1541-II, 1570 or 1571, or a 1541 Ultimate's 1541 emulation. In VICE, true drive emulation on.</p></div>
+      <div class="spec reveal"><h3>Controls</h3><p>Either joystick, or <code>SPACE</code> / <code>RETURN</code>. <code>F1</code> pause, <code>F3</code> music, <code>RUN/STOP</code> quit.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="credits">
+      <div>Original game<em>Reservoir Gods</em></div>
+      <div>Music<em>MSG</em></div>
+      <div>C64 version<em>Bossman of Rift</em></div>
+      <div>Disk loader<em>Loader by Krill</em></div>
+    </div>
+    <p>The original SuperFly for the Atari ST is at <a href="https://rg.atari.org/superfly.htm">rg.atari.org</a>.</p>
+  </div>
+</footer>
+
+<script>
+  // Fade sections in as they scroll into view
+  const io = new IntersectionObserver(entries => {
+    for (const e of entries) if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }, { threshold: .15 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
+</body>
+</html>
